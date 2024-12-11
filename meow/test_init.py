@@ -1,5 +1,5 @@
 import pytest
-from index import is_meow
+from meow import is_meow
 
 def test_valid_cat_sounds():
     assert is_meow("meow") is True
@@ -15,4 +15,4 @@ def test_invalid_cat_sounds():
 def test_empty_or_invalid_inputs():
     assert is_meow("") is False
     assert is_meow(" ") is False
-    assert is_meow(None) is False 
+    assert is_meow(None) is False
