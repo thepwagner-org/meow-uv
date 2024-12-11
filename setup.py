@@ -9,7 +9,7 @@ setup(
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
     url="https://github.com/thepwagner-org/meow-pip",
-    packages=find_packages(exclude=["*/test_*"]),
+    packages=find_packages(exclude=["*test*"]),
     classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
