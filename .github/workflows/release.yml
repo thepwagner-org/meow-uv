@@ -16,13 +16,33 @@ jobs:
     environment: pypi
 
     steps:
-      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
-      - uses: astral-sh/setup-uv@38f3f104447c67c051c4a08e39b64a148898af3a # v4.2.0
-      - run: uv python install
+      - name: 🏗️ Setup uv
+        uses: astral-sh/setup-uv@38f3f104447c67c051c4a08e39b64a148898af3a # v4.2.0
+      - name: 🏗️ Install Python
+        run: uv python install
 
-      - run: uv sync --all-extras --dev
-      - run: uv build
+      - name: 🔄 Sync Dependencies
+        run: uv sync --all-extras --dev
+      - name: 📦 Build Package
+        run: uv build
 
-      - uses: pypa/gh-action-pypi-publish@67339c736fd9354cd4f8cb0b744f2b82a74b5c70 # v1.12.3
+      - name: 🚀 Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@67339c736fd9354cd4f8cb0b744f2b82a74b5c70 # v1.12.3
+
+      - name: 🔐 Generate Build Provenance
+        uses: actions/attest-build-provenance@7668571508540a607bdfd90a87a560489fe372eb # v2.1.0
+        with:
+          subject-path: "dist/meow_uv*"
+
+      - name: 📥 Upload to GitHub
+        run: |
+          for file in dist/meow_uv*; do
+            gh release upload "${GH_VERSION}" "$file"
+          done
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_VERSION: ${{ github.event.release.tag_name }}
